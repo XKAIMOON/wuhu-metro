@@ -44,6 +44,91 @@ body{
 h1,h2,h3,h4{font-family:'Noto Serif SC',serif;font-weight:700}
 a{color:inherit;text-decoration:none}
 
+/* ========== Design System ========== */
+.kicker{
+  font-size:11.5px;font-weight:500;color:var(--bronze);
+  letter-spacing:0.34em;text-indent:0.34em;margin-bottom:10px;
+}
+.section > .kicker{text-align:center}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 26px;border-radius:9999px;border:none;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:600;letter-spacing:0.02em;
+  white-space:nowrap;transition:var(--transition);
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--bronze),var(--bronze-dark));
+  color:var(--white);
+  box-shadow:0 6px 18px rgba(139,105,20,0.26),inset 0 1px 0 rgba(255,255,255,0.28);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(139,105,20,0.32),inset 0 1px 0 rgba(255,255,255,0.28)}
+.btn-primary:active{transform:translateY(0) scale(0.98)}
+.btn-secondary{
+  background:var(--white);color:var(--green);
+  border:1px solid rgba(139,105,20,0.22);
+  box-shadow:0 2px 10px rgba(44,36,22,0.05);
+}
+.btn-secondary:hover{border-color:var(--bronze-light);transform:translateY(-2px)}
+.avatar{
+  width:38px;height:38px;flex:0 0 38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif SC',serif;font-weight:700;font-size:16px;line-height:1;
+  color:var(--white);background:var(--a,var(--green));
+  box-shadow:inset 0 -2px 6px rgba(0,0,0,0.16);
+  user-select:none;
+}
+.avatar-stack{display:flex;align-items:center}
+.avatar-stack .avatar{
+  width:28px;height:28px;flex:0 0 28px;font-size:12px;
+  margin-left:-9px;border:2px solid var(--white);
+}
+.avatar-stack .avatar:first-child{margin-left:0}
+.avatar-stack[hidden]{display:none}
+.pill{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:7px 16px;border-radius:9999px;
+  background:var(--white);border:1px solid rgba(139,105,20,0.15);
+  box-shadow:0 2px 12px rgba(44,36,22,0.08);
+  font-size:13px;color:var(--ink-light);
+}
+.pill strong{color:var(--green);font-size:15px;font-family:'Noto Serif SC',serif}
+
+/* ========== Scroll Progress ========== */
+.scroll-progress{
+  position:fixed;top:calc(var(--nav-h) - 2px);left:0;height:2px;width:0;
+  z-index:120;background:linear-gradient(90deg,var(--bronze),var(--bronze-light));
+  transition:width 0.12s linear;
+}
+
+/* ========== Photo Marquee ========== */
+.marquee{
+  position:relative;overflow:hidden;background:var(--cream);
+  padding:40px 0 8px;
+}
+.marquee::before,.marquee::after{
+  content:'';position:absolute;top:0;bottom:0;width:14%;z-index:2;
+  pointer-events:none;
+}
+.marquee::before{left:0;background:linear-gradient(90deg,var(--cream),rgba(250,247,242,0))}
+.marquee::after{right:0;background:linear-gradient(270deg,var(--cream),rgba(250,247,242,0))}
+.marquee-track{display:flex;width:max-content;animation:marquee 52s linear infinite}
+.marquee:hover .marquee-track{animation-play-state:paused}
+.marquee img{
+  display:block;height:230px;width:auto;margin-right:20px;
+  border-radius:16px;box-shadow:0 10px 30px rgba(44,36,22,0.14);
+  object-fit:cover;
+}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ========== Reveal on Scroll ========== */
+.reveal{opacity:0;transform:translateY(30px)}
+.reveal.in{
+  animation:fadeInUp 0.8s cubic-bezier(0.22,1,0.36,1) forwards;
+  animation-delay:var(--d,0ms);
+}
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0)}}
+
+/* ========== Nav ========== */
 /* ========== Nav ========== */
 .nav{
   position:sticky;top:0;z-index:100;
@@ -193,6 +278,7 @@ a{color:inherit;text-decoration:none}
   background:var(--white);border-radius:var(--radius-lg);
   border:1px solid rgba(139,105,20,0.2);
   box-shadow:var(--shadow);overflow:hidden;
+  scroll-margin-top:calc(var(--nav-h) + 16px);
 }
 .detail-hero{
   position:relative;height:320px;overflow:hidden;
@@ -202,7 +288,12 @@ a{color:inherit;text-decoration:none}
   position:absolute;inset:0;
   background-size:cover;background-position:center;
   transition:var(--transition);
+  animation:heroZoom 1.6s cubic-bezier(0.4,0,0.2,1) both;
 }
+.detail-hero.has-photo::after{
+  background:linear-gradient(0deg,rgba(28,22,14,0.82),rgba(28,22,14,0.15) 55%,rgba(28,22,14,0.3));
+}
+@keyframes heroZoom{from{transform:scale(1.06)}to{transform:scale(1)}}
 .detail-hero::after{
   content:'';position:absolute;inset:0;
   background:linear-gradient(0deg,rgba(45,90,75,0.7),transparent 60%);
@@ -231,14 +322,19 @@ a{color:inherit;text-decoration:none}
   gap:16px;margin-top:24px;
 }
 .feature-card{
-  padding:20px 16px;text-align:center;
-  background:var(--cream);border-radius:var(--radius);
-  border:1px dashed rgba(139,105,20,0.2);
+  padding:22px 16px;text-align:center;
+  background:linear-gradient(180deg,#FFFFFF,#FBF8F3);
+  border-radius:16px;
+  border:1px solid rgba(139,105,20,0.12);
+  box-shadow:0 2px 12px rgba(44,36,22,0.06);
   transition:var(--transition);
 }
-.feature-card:hover{border-color:var(--bronze-light);transform:translateY(-2px)}
-.feature-card .icon{font-size:32px;margin-bottom:8px}
-.feature-card .label{font-size:14px;font-weight:500;color:var(--green)}
+.feature-card:hover{
+  border-color:rgba(201,168,76,0.55);transform:translateY(-4px);
+  box-shadow:0 12px 28px rgba(44,36,22,0.11);
+}
+.feature-card .icon{font-size:34px;margin-bottom:10px;line-height:1}
+.feature-card .label{font-size:14px;font-weight:600;color:var(--green)}
 
 /* ========== Iron Frame ========== */
 .iron-frame{
@@ -255,51 +351,84 @@ a{color:inherit;text-decoration:none}
 }
 
 /* ========== Comments ========== */
-.comments-section{margin-top:32px}
-.comments-section h3{
-  font-size:20px;color:var(--green);margin-bottom:20px;
-  display:flex;align-items:center;gap:8px;
+.comments-section{margin-top:40px}
+.comments-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;margin-bottom:20px;
 }
-.comment-form{
-  display:flex;gap:12px;flex-wrap:wrap;
-  padding:20px;background:var(--cream);border-radius:var(--radius);
+.comments-head h3{font-size:23px;color:var(--green);line-height:1.2}
+.comments-head-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.comment-composer{
+  padding:18px;background:var(--cream);border-radius:20px;
+  border:1px solid rgba(139,105,20,0.14);
 }
-.comment-form input,.comment-form textarea{
-  font-family:inherit;font-size:14px;padding:10px 14px;
-  border:1px solid rgba(139,105,20,0.2);border-radius:8px;
-  background:var(--white);color:var(--ink);
-  transition:var(--transition);outline:none;
-}
-.comment-form input:focus,.comment-form textarea:focus{
-  border-color:var(--bronze-light);box-shadow:0 0 0 3px rgba(201,168,76,0.15);
-}
-.comment-form input{flex:1;min-width:120px}
-.comment-form textarea{width:100%;min-height:80px;resize:vertical}
-.comment-form button{
-  padding:10px 24px;font-family:inherit;font-size:14px;font-weight:600;
-  background:var(--bronze);color:var(--white);border:none;
-  border-radius:20px;cursor:pointer;transition:var(--transition);
-  position:relative;overflow:hidden;
-}
-.comment-form button:hover{background:var(--bronze-dark);transform:translateY(-1px)}
-.comment-form button:active{transform:scale(0.97)}
-.comment-list{list-style:none;margin-top:16px}
-.comment-item{
-  padding:16px;margin-bottom:12px;
-  background:var(--white);border-radius:var(--radius);
-  border:1px solid rgba(139,105,20,0.1);
+.composer-row{display:flex;align-items:center;gap:12px}
+.composer-name{
+  flex:1;min-width:0;font-family:inherit;font-size:14px;padding:12px 20px;
+  border:1px solid rgba(139,105,20,0.2);border-radius:9999px;
+  background:var(--white);color:var(--ink);outline:none;
   transition:var(--transition);
 }
-.comment-item:hover{border-color:rgba(139,105,20,0.25);box-shadow:var(--shadow)}
-.comment-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.comment-name{font-weight:600;color:var(--green);font-size:15px}
-.comment-time{font-size:12px;color:var(--ink-light)}
-.comment-text{font-size:14px;color:var(--ink);line-height:1.6}
+.composer-text{
+  display:block;width:100%;margin-top:12px;min-height:100px;resize:vertical;
+  font-family:inherit;font-size:14.5px;line-height:1.75;padding:14px 20px;
+  border:1px solid rgba(139,105,20,0.2);border-radius:18px;
+  background:var(--white);color:var(--ink);outline:none;
+  transition:var(--transition);
+}
+.composer-name::placeholder,.composer-text::placeholder{color:rgba(107,94,74,0.55)}
+.composer-name:focus,.composer-text:focus{
+  border-color:var(--bronze-light);box-shadow:0 0 0 3px rgba(201,168,76,0.16);
+}
+.composer-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  margin-top:10px;font-size:12px;color:var(--ink-light);
+}
+.composer-count{font-variant-numeric:tabular-nums;opacity:0.75}
+.composer-hint.err{color:#B4483C}
+.composer-hint.ok{color:var(--green)}
+.comment-list{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:12px}
+.comment-item{
+  display:flex;gap:14px;padding:18px 20px;
+  background:var(--white);border-radius:16px;
+  border:1px solid rgba(139,105,20,0.1);
+  box-shadow:0 2px 12px rgba(44,36,22,0.05);
+  transition:var(--transition);
+  animation:riseIn 0.55s cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay:calc(var(--i,0) * 60ms);
+}
+.comment-item:hover{
+  transform:translateY(-2px);
+  border-color:rgba(139,105,20,0.22);
+  box-shadow:0 12px 28px rgba(44,36,22,0.1);
+}
+.comment-item.is-new{animation:riseIn 0.55s cubic-bezier(0.22,1,0.36,1) both,flashNew 2.6s ease-out 1}
+.comment-main{flex:1;min-width:0}
+.comment-header{
+  display:flex;align-items:baseline;justify-content:space-between;
+  gap:12px;margin-bottom:5px;
+}
+.comment-name{
+  font-family:'Noto Serif SC',serif;font-weight:700;
+  font-size:15px;color:var(--green);
+}
+.comment-time{font-size:12px;color:var(--ink-light);opacity:0.8;white-space:nowrap}
+.comment-text{
+  font-size:14.5px;color:var(--ink);line-height:1.78;
+  white-space:pre-wrap;overflow-wrap:anywhere;
+}
+.comment-empty{
+  padding:28px 20px;text-align:center;color:var(--ink-light);font-size:14px;
+  background:var(--cream);border-radius:16px;
+  border:1px dashed rgba(139,105,20,0.22);
+}
+@keyframes riseIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes flashNew{0%{background:#FFF8E7;box-shadow:0 0 0 3px rgba(201,168,76,0.28)}100%{background:var(--white)}}
 
 /* ========== Creative Products ========== */
 .creative-section{background:linear-gradient(180deg,var(--cream),var(--pink-pale),var(--cream))}
 .creative-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:24px;
 }
 .creative-card{
   background:var(--white);border-radius:var(--radius-lg);
@@ -308,33 +437,56 @@ a{color:inherit;text-decoration:none}
   border:1px solid rgba(139,105,20,0.1);
 }
 .creative-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
-.creative-card-visual{
-  height:200px;display:flex;align-items:center;justify-content:center;
-  font-size:64px;position:relative;overflow:hidden;
+.creative-card-img{
+  aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+  background:#1B1611;overflow:hidden;
 }
-.creative-card-visual.grating{
-  background:linear-gradient(135deg,var(--bronze-dark),var(--bronze),var(--bronze-light));
-  perspective:800px;
+.creative-card-img img{
+  width:100%;height:100%;object-fit:contain;display:block;
+  transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);
 }
-.grating-inner{
-  width:160px;height:200px;position:relative;
-  transform-style:preserve-3d;transition:transform 0.8s ease;
-}
-.creative-card:hover .grating-inner{transform:rotateY(180deg)}
-.grating-front,.grating-back{
-  position:absolute;inset:0;backface-visibility:hidden;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border-radius:var(--radius);color:var(--white);
-}
-.grating-front{background:linear-gradient(135deg,rgba(139,105,20,0.9),rgba(92,69,16,0.9))}
-.grating-back{background:linear-gradient(135deg,rgba(45,90,75,0.9),rgba(74,139,122,0.9));transform:rotateY(180deg)}
-.grating-front .year,.grating-back .year{font-size:24px;font-weight:900;font-family:'Noto Serif SC',serif}
-.grating-front .desc,.grating-back .desc{font-size:13px;margin-top:4px;opacity:0.85}
-.creative-card-visual.mascot{background:linear-gradient(135deg,var(--pink-pale),var(--green-pale))}
-.creative-card-visual.products{background:linear-gradient(135deg,var(--green-pale),var(--cream))}
+.creative-card:hover .creative-card-img img{transform:scale(1.05)}
 .creative-card-body{padding:20px}
 .creative-card-body h4{font-size:17px;color:var(--green);margin-bottom:6px}
 .creative-card-body p{font-size:14px;color:var(--ink-light);line-height:1.6}
+
+/* ========== Footer ========== */
+/* ========== Photo Gallery ========== */
+.photo-section{background:var(--white)}
+.photo-lead{
+  text-align:center;color:var(--ink-light);font-size:15px;
+  margin:-32px 0 40px;
+}
+.photo-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:24px}
+.photo-card{
+  flex:0 1 348px;max-width:420px;
+  margin:0;position:relative;border-radius:var(--radius-lg);overflow:hidden;
+  background:var(--cream);border:1px solid rgba(139,105,20,0.18);
+  box-shadow:var(--shadow);transition:var(--transition);
+}
+.photo-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
+.photo-card-img{position:relative;aspect-ratio:4/5;overflow:hidden}
+.photo-card-img img{
+  display:block;width:100%;height:100%;object-fit:cover;
+  transition:transform 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+.photo-card:hover .photo-card-img img{transform:scale(1.06)}
+.photo-card-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(28,22,14,0.72),rgba(28,22,14,0.05) 55%);
+}
+.photo-card-badge{
+  position:absolute;top:14px;left:14px;z-index:2;
+  font-size:12px;letter-spacing:0.5px;padding:3px 11px;border-radius:20px;
+  color:var(--white);background:rgba(28,22,14,0.35);
+  border:1px solid rgba(255,255,255,0.35);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+}
+.photo-card-cap{
+  position:absolute;left:20px;right:20px;bottom:18px;z-index:2;color:var(--white);
+}
+.photo-card-cap h4{font-size:20px;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,0.45)}
+.photo-card-cap p{font-size:13px;opacity:0.92;margin-top:2px}
 
 /* ========== Footer ========== */
 .footer{
@@ -349,7 +501,6 @@ a{color:inherit;text-decoration:none}
 @media(max-width:900px){
   .route-layout{grid-template-columns:1fr}
   .route-map-panel{position:static;margin-bottom:24px}
-  .creative-grid{grid-template-columns:1fr}
   .nav-links{display:none;position:absolute;top:var(--nav-h);left:0;right:0;
     flex-direction:column;background:rgba(250,247,242,0.95);padding:16px 32px;
     border-bottom:1px solid rgba(139,105,20,0.2);gap:16px}
@@ -358,6 +509,17 @@ a{color:inherit;text-decoration:none}
   .section{padding:48px 16px}
   .hero{min-height:300px;padding:40px 16px}
   .detail-hero{height:220px}
+  .comments-head{align-items:flex-start;flex-direction:column;gap:12px}
+  .comment-composer .avatar{display:none}
+  .composer-row{flex-wrap:wrap}
+  .composer-name{flex:1 1 160px}
+  .marquee{padding-top:32px}
+  .marquee img{height:170px;margin-right:14px}
+}
+
+@media(max-width:600px){
+  .composer-row .btn{flex:1 1 100%}
+  .marquee img{height:140px;margin-right:12px}
 }
 
 /* ========== Animations ========== */
@@ -366,11 +528,17 @@ a{color:inherit;text-decoration:none}
   to{opacity:1;transform:translateY(0)}
 }
 .fade-up{animation:fadeUp 0.6s ease forwards}
-@keyframes glow{
-  0%,100%{box-shadow:0 0 8px rgba(201,168,76,0.3)}
-  50%{box-shadow:0 0 24px rgba(201,168,76,0.6)}
+
+/* ========== Reduced Motion ========== */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:0.001ms !important;animation-iteration-count:1 !important;
+    transition-duration:0.001ms !important;
+  }
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+  .marquee-track{animation:none}
 }
-.fish-lantern-glow{animation:glow 2s ease-in-out infinite}
 </style>
 </head>
 <body>
@@ -387,6 +555,7 @@ a{color:inherit;text-decoration:none}
   </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#route" class="active">线路风光</a></li>
+    <li><a href="#gallery">沿线实景</a></li>
     <li><a href="#creative">文创展示</a></li>
     <li><a href="#about">关于芜湖</a></li>
   </ul>
@@ -394,6 +563,9 @@ a{color:inherit;text-decoration:none}
     <span></span><span></span><span></span>
   </button>
 </nav>
+
+<!-- ========== Scroll Progress ========== -->
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- ========== Hero ========== -->
 <section class="hero">
@@ -408,8 +580,29 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 
+<!-- ========== Photo Marquee ========== -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack">
+    <img src="images/jiuzi-square.jpg" alt="" loading="lazy">
+    <img src="images/zheshan.jpg" alt="" loading="lazy">
+    <img src="images/zhongshan-beilu.jpg" alt="" loading="lazy">
+    <img src="images/shenshan.jpg" alt="" loading="lazy">
+    <img src="images/binjiang-sunset.jpg" alt="" loading="lazy">
+    <img src="images/binjiang-promenade.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-card.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-bookmark-pagoda.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-bookmark-phoenix.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-bookmark-bridge.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-bookmark-willow.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-lamp-rail.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-lamp-zheshan.jpg" alt="" loading="lazy">
+    <img src="images/wenchuang-lamp-jiuzi.jpg" alt="" loading="lazy">
+  </div>
+</div>
+
 <!-- ========== Route Section ========== -->
 <section class="section route-section" id="route">
+  <p class="kicker">LIGHT RAIL LINE</p>
   <h2 class="section-title">🚝 轻轨线路图</h2>
   <div class="route-layout">
     <div class="route-map-panel">
@@ -425,54 +618,148 @@ a{color:inherit;text-decoration:none}
   </div>
 </section>
 
+<!-- ========== Photo Gallery ========== -->
+<section class="section photo-section" id="gallery">
+  <p class="kicker">ALONG THE LINE</p>
+  <h2 class="section-title">📷 沿线实景</h2>
+  <p class="photo-lead">镜头里的芜湖轻轨——车站之外，是这座城市真实的四季</p>
+  <div class="photo-grid">
+    <figure class="photo-card">
+      <div class="photo-card-img">
+        <img src="images/jiuzi-square.jpg" alt="鸠兹广场「鸠顶泽瑞」青铜雕塑" loading="lazy">
+        <span class="photo-card-badge">实景照片</span>
+        <figcaption class="photo-card-cap">
+          <h4>鸠兹广场</h4>
+          <p>七鸠腾跃，城市原点</p>
+        </figcaption>
+      </div>
+    </figure>
+    <figure class="photo-card">
+      <div class="photo-card-img">
+        <img src="images/zheshan.jpg" alt="赭山公园外的荷塘与驶过的轻轨列车" loading="lazy">
+        <span class="photo-card-badge">实景照片</span>
+        <figcaption class="photo-card-cap">
+          <h4>赭山公园</h4>
+          <p>荷塘映赭山，轻轨穿城过</p>
+        </figcaption>
+      </div>
+    </figure>
+    <figure class="photo-card">
+      <div class="photo-card-img">
+        <img src="images/zhongshan-beilu.jpg" alt="中山北路樱花盛开，轻轨列车穿行花海" loading="lazy">
+        <span class="photo-card-badge">实景照片</span>
+        <figcaption class="photo-card-cap">
+          <h4>中山北路</h4>
+          <p>列车穿过一街樱花</p>
+        </figcaption>
+      </div>
+    </figure>
+    <figure class="photo-card">
+      <div class="photo-card-img">
+        <img src="images/shenshan.jpg" alt="神山公园春季郁金香花海" loading="lazy">
+        <span class="photo-card-badge">实景照片</span>
+        <figcaption class="photo-card-cap">
+          <h4>神山公园</h4>
+          <p>春日郁金香花海</p>
+        </figcaption>
+      </div>
+    </figure>
+    <figure class="photo-card">
+      <div class="photo-card-img">
+        <img src="images/binjiang-sunset.jpg" alt="滨江公园江畔黄昏，长江大桥与看日落的人群" loading="lazy">
+        <span class="photo-card-badge">实景照片</span>
+        <figcaption class="photo-card-cap">
+          <h4>滨江公园</h4>
+          <p>江畔长廊，落日长桥</p>
+        </figcaption>
+      </div>
+    </figure>
+  </div>
+</section>
+
 <!-- ========== Creative Products ========== -->
 <section class="section creative-section" id="creative">
+  <p class="kicker">CULTURAL GOODS</p>
   <h2 class="section-title">🎨 文创展示</h2>
+  <p class="photo-lead">把芜湖的文化做成可以带走的东西——铁画、纸雕与光栅卡</p>
   <div class="creative-grid">
     <div class="creative-card">
-      <div class="creative-card-visual grating">
-        <div class="grating-inner">
-          <div class="grating-front">
-            <span style="font-size:40px">🎞️</span>
-            <span class="year">老芜湖</span>
-            <span class="desc">米市码头 · 铁画作坊</span>
-          </div>
-          <div class="grating-back">
-            <span style="font-size:40px">🚝</span>
-            <span class="year">新芜湖</span>
-            <span class="desc">轻轨穿城 · 现代地标</span>
-          </div>
-        </div>
+      <div class="creative-card-img">
+        <img src="images/wenchuang-card.jpg" alt="光栅票卡「古今芜湖」，转动呈现镜湖荷花与鸠兹古镇两幅画面" loading="lazy">
       </div>
       <div class="creative-card-body">
         <h4>光栅票卡「古今芜湖」</h4>
-        <p>特殊光栅工艺，转动间呈现芜湖的百年变迁——从米市码头到现代轻轨，一卡两景，穿越时光。</p>
+        <p>特殊光栅工艺，转动间一卡两景——镜湖荷花与鸠兹古镇随角度切换，把芜湖的百年变迁收进一张卡里。</p>
       </div>
     </div>
 
     <div class="creative-card">
-      <div class="creative-card-visual mascot">
-        <div style="display:flex;gap:12px;font-size:48px">
-          <span style="animation:bob 2s ease-in-out infinite">🕊️</span>
-          <span style="animation:bob 2s ease-in-out 0.3s infinite">🌸</span>
-          <span style="animation:bob 2s ease-in-out 0.6s infinite">⛵</span>
-        </div>
+      <div class="creative-card-img">
+        <img src="images/wenchuang-bookmark-pagoda.jpg" alt="铁画书签·塔影江声，中江塔与江涛镂空纹样" loading="lazy">
       </div>
       <div class="creative-card-body">
-        <h4>景点拟人化吉祥物</h4>
-        <p>鸠鸟化身轻轨向导「鸠鸠」、荷花精灵守护镜湖、铁画匠人传承技艺——每个站点都有属于自己的文化使者。</p>
+        <h4>铁画书签·塔影江声</h4>
+        <p>以锤为笔、以铁为墨，中江塔与江涛镂空成笺，捶打出的金属肌理在灯下泛着微光。</p>
       </div>
     </div>
 
     <div class="creative-card">
-      <div class="creative-card-visual products">
-        <div style="display:flex;gap:16px;font-size:40px">
-          <span>🎴</span><span>📔</span><span>🏮</span><span>🧣</span>
-        </div>
+      <div class="creative-card-img">
+        <img src="images/wenchuang-bookmark-phoenix.jpg" alt="铁画书签·凤鸣九霄，凤凰与云纹镂空纹样" loading="lazy">
       </div>
       <div class="creative-card-body">
-        <h4>周边衍生品</h4>
-        <p>鱼灯造型书签、铁画纹样丝巾、鸠鸟主题明信片套装、荷花元素帆布包——把芜湖文化带回家。</p>
+        <h4>铁画书签·凤鸣九霄</h4>
+        <p>鸠鸟图腾化作凤凰纹样，云纹缠绕、翅羽层叠，一枚薄铁里藏着一整片天空。</p>
+      </div>
+    </div>
+
+    <div class="creative-card">
+      <div class="creative-card-img">
+        <img src="images/wenchuang-bookmark-bridge.jpg" alt="铁画书签·长虹卧波，芜湖长江大桥钢桁架纹样" loading="lazy">
+      </div>
+      <div class="creative-card-body">
+        <h4>铁画书签·长虹卧波</h4>
+        <p>芜湖长江大桥的钢桁架凝在尺许书签上，江波与桥影一线排开，是江城最硬朗的剪影。</p>
+      </div>
+    </div>
+
+    <div class="creative-card">
+      <div class="creative-card-img">
+        <img src="images/wenchuang-bookmark-willow.jpg" alt="铁画书签·柳桥烟雨，垂柳与拱桥镂空纹样" loading="lazy">
+      </div>
+      <div class="creative-card-body">
+        <h4>铁画书签·柳桥烟雨</h4>
+        <p>垂柳、拱桥与流水，江南水乡的景致被锻打成一片通透的花窗，夹在书页里就是一段芜湖。</p>
+      </div>
+    </div>
+
+    <div class="creative-card">
+      <div class="creative-card-img">
+        <img src="images/wenchuang-lamp-rail.jpg" alt="纸雕灯·轻轨穿城，钟楼、中江塔与轻轨列车的多层纸雕夜灯" loading="lazy">
+      </div>
+      <div class="creative-card-body">
+        <h4>纸雕灯·轻轨穿城</h4>
+        <p>一层层纸雕叠出老海关钟楼、中江塔与跨江大桥，轻轨列车亮着灯，在夜色里缓缓驶过。</p>
+      </div>
+    </div>
+
+    <div class="creative-card">
+      <div class="creative-card-img">
+        <img src="images/wenchuang-lamp-zheshan.jpg" alt="纸雕灯·赭山星光，山径灯笼与江城万家灯火" loading="lazy">
+      </div>
+      <div class="creative-card-body">
+        <h4>纸雕灯·赭山星光</h4>
+        <p>赭山夜色与江城万家灯火，山径上的灯笼一路点上去，暖光透出纸层，像把整座山的夜色收进木框。</p>
+      </div>
+    </div>
+
+    <div class="creative-card">
+      <div class="creative-card-img">
+        <img src="images/wenchuang-lamp-jiuzi.jpg" alt="纸雕灯·鸠兹古镇，灯笼高挂的古镇长街夜灯" loading="lazy">
+      </div>
+      <div class="creative-card-body">
+        <h4>纸雕灯·鸠兹古镇</h4>
+        <p>灯笼高挂的鸠兹古镇长街，暖黄光晕从纸层间透出来，青瓦粉墙在夜里也温柔。</p>
       </div>
     </div>
   </div>
@@ -480,6 +767,7 @@ a{color:inherit;text-decoration:none}
 
 <!-- ========== About ========== -->
 <section class="section" id="about" style="background:var(--white)">
+  <p class="kicker">ABOUT WUHU</p>
   <h2 class="section-title">🏙️ 关于芜湖</h2>
   <div style="max-width:720px;margin:0 auto;text-align:center">
     <p style="font-size:16px;color:var(--ink-light);line-height:2">
@@ -523,12 +811,26 @@ const stations = [
   {
     id:'jiuzi',name:'鸠兹广场站',sub:'城市之心',tag:'鸠鸟图腾',
     bg:'linear-gradient(135deg,#1a3a2e,#2D5A4B,#4A8B7A)',
+    photos:['images/jiuzi-square.jpg'],
+    photoPos:'center 8%',
     intro:'鸠兹广场是芜湖的城市原点。广场中央矗立着高达33米的「鸠顶泽瑞」青铜雕塑——七只鸠鸟环绕立柱振翅欲飞，象征着芜湖「鸠兹」古称与腾飞之志。广场周边汇集了步行街、镜湖公园等城市地标，是感受芜湖脉搏的第一站。',
     features:[
       {icon:'🕊️',label:'鸠顶泽瑞雕塑'},
       {icon:'🏛️',label:'城市原点'},
       {icon:'🛍️',label:'步行街商圈'},
       {icon:'🌿',label:'镜湖公园'}
+    ]
+  },
+  {
+    id:'binjiang',name:'滨江公园站',sub:'江畔长廊',tag:'落日打卡',
+    bg:'linear-gradient(135deg,#7A4A32,#C97B4A,#F0C08A)',
+    photos:['images/binjiang-promenade.jpg'],
+    intro:'滨江公园沿长江东岸铺开，是芜湖人看江、看桥、看落日的地方。傍晚时分，江面被夕阳染成金红色，散步的人沿着弧形观景平台一路向西，对岸的跨江大桥在暮色里亮起灯带。这里既是守护城市的江堤，也是市民日常的江岸客厅。',
+    features:[
+      {icon:'🌇',label:'江畔落日'},
+      {icon:'🌉',label:'跨江大桥'},
+      {icon:'🚶',label:'滨江步道'},
+      {icon:'⛵',label:'江上船影'}
     ]
   },
   {
@@ -543,14 +845,39 @@ const stations = [
     ]
   },
   {
+    id:'zhongshan',name:'中山北路站',sub:'一街樱花',tag:'春日限定',
+    bg:'linear-gradient(135deg,#2F4460,#4E7CA6,#A9C7DE)',
+    photos:['images/zhongshan-beilu.jpg'],
+    intro:'每年三月，中山北路就变成了芜湖最浪漫的一段路。轻轨高架从花枝间穿过，白色列车与漫天樱花同框，是市民镜头里一年一度的「芜湖春日封面」。出站即是老城街巷，市井烟火与满树繁花在这儿接上，寻常的通勤路也因此多了几分季节的仪式感。',
+    features:[
+      {icon:'🌸',label:'樱花大道'},
+      {icon:'🚝',label:'花海轻轨'},
+      {icon:'📷',label:'春日打卡'},
+      {icon:'🏙️',label:'老城街巷'}
+    ]
+  },
+  {
     id:'zheshan',name:'赭山公园站',sub:'登高望远',tag:'铁画传承',
     bg:'linear-gradient(135deg,#4A3520,#6B4E2E,#8B6914)',
+    photos:['images/zheshan.jpg'],
     intro:'赭山因山石呈赭红色而得名，是芜湖的「城市绿肺」。山上的广济寺香火绵延千年，而山脚下的铁画博物馆则珍藏着芜湖铁画这一国家级非遗的精粹——以锤为笔、以铁为墨，锻打出山水人物的铮铮铁骨。',
     features:[
       {icon:'🔨',label:'铁画博物馆'},
       {icon:'🏯',label:'广济寺'},
       {icon:'⛰️',label:'赭山远眺'},
       {icon:'🌳',label:'城市绿肺'}
+    ]
+  },
+  {
+    id:'shenshan',name:'神山公园站',sub:'城东绿意',tag:'花海踏青',
+    bg:'linear-gradient(135deg,#4A6B3D,#7BA05B,#C8DCA8)',
+    photos:['images/shenshan.jpg'],
+    intro:'神山公园是芜湖城东的城市绿肺，也是轻轨沿线最「治愈」的一站。每年春天，成片的郁金香沿坡地铺展，粉白相间的花田与林荫道、大草坪相映成趣。市民推着童车散步、在草地上铺开野餐垫，一站之外是车流，一站之内是慢下来的生活。',
+    features:[
+      {icon:'🌷',label:'郁金香花海'},
+      {icon:'🌳',label:'城市绿肺'},
+      {icon:'🧺',label:'草坪野餐'},
+      {icon:'🚶',label:'休闲步道'}
     ]
   },
   {
@@ -598,13 +925,24 @@ const demoComments = {
     {name:'芜湖小青年',time:'2026-08-05 14:30',text:'每次路过鸠兹广场都会被鸠顶泽瑞震撼到，芜湖越来越好了！'},
     {name:'旅行者阿飞',time:'2026-08-04 09:15',text:'从鸠兹广场出发沿着轻轨一路向东，风景太美了～'}
   ],
+  binjiang:[
+    {name:'追落日的人',time:'2026-06-18 19:20',text:'夏天傍晚来滨江公园最舒服，江风一吹，日落能把整条江染成金色。'},
+    {name:'江城老居民',time:'2026-06-12 18:40',text:'从小在江边长大，现在每天晚饭后都来走一段，看桥看船。'}
+  ],
   jinghu:[
     {name:'荷花姑娘',time:'2026-08-03 16:20',text:'镜湖的荷花开得正好，每年夏天都要来打卡！'},
     {name:'摄影师小陈',time:'2026-08-02 10:05',text:'镜湖细柳的晨雾中拍照，每一帧都是水墨画。'}
   ],
+  zhongshan:[
+    {name:'春日记录者',time:'2026-03-28 08:20',text:'樱花开的那十来天，一定要坐一次轻轨，从花里穿过去。'},
+    {name:'通勤的小李',time:'2026-03-25 18:10',text:'平时上班路过没觉得，今年认真拍了一张，真的很出片。'}
+  ],
   zheshan:[
     {name:'铁画传人',time:'2026-08-01 11:30',text:'铁画是芜湖的骄傲，希望更多年轻人来了解这项非遗。'},
     {name:'登山爱好者',time:'2026-07-30 07:45',text:'赭山不高但风景绝佳，登顶后俯瞰芜湖城太惬意了。'}
+  ],
+  shenshan:[
+    {name:'周末遛娃团',time:'2026-03-22 10:40',text:'郁金香开得正好，草坪上能坐一下午，孩子玩得不想走。'}
   ],
   fantawild:[
     {name:'带娃妈妈',time:'2026-07-28 15:10',text:'方特是周末遛娃的好去处，孩子玩得不想回家！'}
@@ -634,11 +972,12 @@ function selectStation(index,el){
 
   const detailPanel = document.getElementById('detailPanel');
   detailPanel.innerHTML = `
-    <div class="detail-hero" style="background:${s.bg}">
+    <div class="detail-hero${s.photos?' has-photo':''}" style="background:${s.bg}">
+      ${s.photos?`<div class="detail-hero-img" style="background-image:url('${s.photos[0]}')${s.photoPos?';background-position:'+s.photoPos:''}"></div>`:''}
       <div class="detail-hero-title">
         <h2>${s.name}</h2>
         <div class="tags">
-          <span>🚝 ${s.sub}</span><span>${s.tag}</span>
+          <span>🚝 ${s.sub}</span><span>${s.tag}</span>${s.photos?'<span>📷 实景照片</span>':''}
         </div>
       </div>
     </div>
@@ -655,22 +994,32 @@ function selectStation(index,el){
         `).join('')}
       </div>
       <div class="comments-section">
-        <h3>💬 游客留言（${comments.length}条）</h3>
-        <div class="comment-form" id="commentForm">
-          <input type="text" id="commentName" placeholder="你的昵称" maxlength="20">
-          <button onclick="submitComment('${s.id}')" class="fish-lantern-glow">💡 留言</button>
-          <textarea id="commentText" placeholder="写下你对这里的感受..." maxlength="500"></textarea>
+        <div class="comments-head">
+          <div>
+            <p class="kicker">TRAVELER NOTES</p>
+            <h3>游客留言</h3>
+          </div>
+          <div class="comments-head-meta">
+            <span class="pill">💬 共 <strong id="commentTotal_${s.id}">${comments.length}</strong> 条</span>
+            <div class="avatar-stack" id="commentStack_${s.id}"${comments.length?'':' hidden'}>${comments.slice(-3).reverse().map(c=>`<div class="avatar" style="--a:${avatarColor(c.name)}">${escapeHtml(firstChar(c.name))}</div>`).join('')}</div>
+          </div>
+        </div>
+        <div class="comment-composer">
+          <div class="composer-row">
+            <div class="avatar" style="--a:var(--bronze-light)">你</div>
+            <input type="text" id="commentName" class="composer-name" placeholder="你的昵称" maxlength="20">
+            <button class="btn btn-primary" onclick="submitComment('${s.id}')">发表留言</button>
+          </div>
+          <textarea id="commentText" class="composer-text" placeholder="写下你对这里的感受……" maxlength="500" oninput="updateCharCount('${s.id}')"></textarea>
+          <div class="composer-foot">
+            <span class="composer-count" id="commentCount_${s.id}">0 / 500</span>
+            <span class="composer-hint" id="commentHint_${s.id}"></span>
+          </div>
         </div>
         <ul class="comment-list" id="commentList_${s.id}">
-          ${comments.slice().reverse().map(c=>`
-            <li class="comment-item fade-up">
-              <div class="comment-header">
-                <span class="comment-name">🐟 ${escapeHtml(c.name)}</span>
-                <span class="comment-time">${c.time}</span>
-              </div>
-              <div class="comment-text">${escapeHtml(c.text)}</div>
-            </li>
-          `).join('')}
+          ${comments.length
+            ? comments.slice().reverse().map((c,i)=>renderCommentItem(c,i)).join('')
+            : '<li class="comment-empty">还没有留言，来做第一个分享感受的人吧 🌿</li>'}
         </ul>
       </div>
     </div>
@@ -678,14 +1027,64 @@ function selectStation(index,el){
   detailPanel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
+// ========== Comment Helpers ==========
+const AVATAR_COLORS = ['#2D5A4B','#4A8B7A','#C9A84C','#8B6914','#D4849A','#5C3D4A'];
+function avatarColor(name){
+  const str = String(name || '芜湖');
+  let h = 0;
+  for(let i=0;i<str.length;i++){h = (h*31 + str.charCodeAt(i)) % 9973}
+  return AVATAR_COLORS[h % AVATAR_COLORS.length];
+}
+function firstChar(name){
+  const str = String(name || '游').trim();
+  return str ? Array.from(str)[0] : '游';
+}
+function renderCommentItem(c, index, isNew){
+  return `
+    <li class="comment-item${isNew?' is-new':''}" style="--i:${index||0}">
+      <div class="avatar" style="--a:${avatarColor(c.name)}">${escapeHtml(firstChar(c.name))}</div>
+      <div class="comment-main">
+        <div class="comment-header">
+          <span class="comment-name">${escapeHtml(c.name)}</span>
+          <span class="comment-time">${escapeHtml(c.time)}</span>
+        </div>
+        <div class="comment-text">${escapeHtml(c.text)}</div>
+      </div>
+    </li>
+  `;
+}
+function updateCharCount(stationId){
+  const textEl = document.getElementById('commentText');
+  const counter = document.getElementById('commentCount_'+stationId);
+  const hint = document.getElementById('commentHint_'+stationId);
+  if(textEl && counter){counter.textContent = textEl.value.length+' / 500'}
+  if(hint && hint.classList.contains('err')){hint.textContent = ''; hint.className = 'composer-hint'}
+}
+function updateAvatarStack(stationId, comments){
+  const stack = document.getElementById('commentStack_'+stationId);
+  if(!stack){return}
+  stack.innerHTML = comments.slice(-3).reverse()
+    .map(c=>`<div class="avatar" style="--a:${avatarColor(c.name)}">${escapeHtml(firstChar(c.name))}</div>`)
+    .join('');
+  stack.hidden = comments.length === 0;
+}
+
 // ========== Submit Comment ==========
 function submitComment(stationId){
   const nameEl = document.getElementById('commentName');
   const textEl = document.getElementById('commentText');
+  const hint = document.getElementById('commentHint_'+stationId);
   const name = nameEl.value.trim();
   const text = textEl.value.trim();
-  if(!name){alert('请输入昵称');nameEl.focus();return}
-  if(!text){alert('请输入留言内容');textEl.focus();return}
+
+  if(!name){
+    if(hint){hint.textContent = '请先填写昵称'; hint.className = 'composer-hint err'}
+    nameEl.focus(); return;
+  }
+  if(!text){
+    if(hint){hint.textContent = '留言内容不能为空'; hint.className = 'composer-hint err'}
+    textEl.focus(); return;
+  }
 
   const now = new Date();
   const time = now.getFullYear()+'-'+
@@ -699,22 +1098,19 @@ function submitComment(stationId){
   saveComments(stationId,comments);
 
   const list = document.getElementById('commentList_'+stationId);
-  const li = document.createElement('li');
-  li.className = 'comment-item fade-up';
-  li.innerHTML = `
-    <div class="comment-header">
-      <span class="comment-name">🐟 ${escapeHtml(name)}</span>
-      <span class="comment-time">${time}</span>
-    </div>
-    <div class="comment-text">${escapeHtml(text)}</div>
-  `;
-  list.insertBefore(li,list.firstChild);
+  const empty = list.querySelector('.comment-empty');
+  if(empty){empty.remove()}
+  list.insertAdjacentHTML('afterbegin', renderCommentItem({name,text,time},0,true));
 
-  // Update count
-  const h3 = list.parentElement.querySelector('h3');
-  h3.textContent = '💬 游客留言（'+comments.length+'条）';
+  const total = document.getElementById('commentTotal_'+stationId);
+  if(total){total.textContent = comments.length}
+  updateAvatarStack(stationId, comments);
 
-  nameEl.value = ''; textEl.value = '';
+  if(hint){hint.textContent = '留言已发布，谢谢你的分享 ✓'; hint.className = 'composer-hint ok'}
+  nameEl.value = '';
+  textEl.value = '';
+  const counter = document.getElementById('commentCount_'+stationId);
+  if(counter){counter.textContent = '0 / 500'}
 }
 
 // ========== Escape HTML ==========
@@ -722,6 +1118,61 @@ function escapeHtml(str){
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+// ========== Reveal on Scroll ==========
+function initReveal(){
+  if(!('IntersectionObserver' in window)){return}
+  const groups = [
+    ['#gallery .photo-card',90],
+    ['#creative .creative-card',70],
+    ['#about .feature-card',60]
+  ];
+  groups.forEach(([sel,step])=>{
+    document.querySelectorAll(sel).forEach((el,i)=>{
+      el.classList.add('reveal');
+      el.style.setProperty('--d',(i*step)+'ms');
+    });
+  });
+  document.querySelectorAll('.section > .kicker, .section-title, .photo-lead')
+    .forEach((el,i)=>{
+      el.classList.add('reveal');
+      el.style.setProperty('--d',(i%3)*90+'ms');
+    });
+
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  },{threshold:0.1,rootMargin:'0px 0px -60px 0px'});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+}
+
+// ========== Photo Marquee (duplicate the set for a seamless loop) ==========
+function initMarquee(){
+  const track = document.getElementById('marqueeTrack');
+  if(!track){return}
+  track.querySelectorAll('img').forEach(img=>{
+    const clone = img.cloneNode(true);
+    clone.alt = '';
+    track.appendChild(clone);
+  });
+}
+
+// ========== Scroll Progress ==========
+function initScrollProgress(){
+  const bar = document.getElementById('scrollProgress');
+  if(!bar){return}
+  const update = ()=>{
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (max>0 ? Math.min(100,(window.scrollY/max)*100) : 0)+'%';
+  };
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('resize',update);
+  update();
 }
 
 // ========== Mobile Nav Toggle ==========
@@ -741,6 +1192,11 @@ document.querySelectorAll('.nav-links a').forEach(a=>{
 // ========== Init: Select First Station ==========
 const firstStation = document.querySelector('.station');
 if(firstStation) firstStation.click();
+
+// ========== Init: Motion Layers ==========
+initReveal();
+initMarquee();
+initScrollProgress();
 </script>
 </body>
 </html>
